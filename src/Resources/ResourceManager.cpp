@@ -2,11 +2,16 @@
 #include "../Render/ShaderProgram.h"
 
 
+
+
 #include <sstream>
 #include <fstream>
 #include <iostream>
 
 
+#define STBI_ONLY_PNG
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 ResourcesManager::ResourcesManager(const std::string& executablePath)
 {
@@ -56,6 +61,27 @@ std::shared_ptr<Renderer::ShaderProgram> ResourcesManager::getShaderProgram(cons
 	}
 
 	return it->second;
+}
+
+void ResourcesManager::loadTexture(const std::string& textureName, const std::string& texturePath)
+{
+	int channels = 0;
+
+	int width = 0;
+
+	int height = 0;
+
+	stbi_set_flip_vertically_on_load(true);
+	unsigned char* pixels = stbi_load(std::string(m_path + '/' + texturePath).c_str(), &width, &height, &channels, 0);
+
+	if (!pixels)
+	{
+		std::cerr << "can't load texture " << texturePath << std::endl;
+		return;
+	}
+
+	stbi_image_free(pixels);
+
 }
 
 std::string ResourcesManager::getFileString(const std::string& relativeFilePath) const
