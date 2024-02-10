@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <glad/glad.h>
-namespace Render
+namespace Renderer
 {
 	class ShaderProgram
 	{
