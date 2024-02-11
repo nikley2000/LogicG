@@ -66,29 +66,24 @@ std::shared_ptr<Renderer::ShaderProgram> ResourcesManager::getShaderProgram(cons
 std::shared_ptr<Renderer::Texture2D> ResourcesManager::loadTexture(const std::string& textureName, const std::string& texturePath)
 {
 	int channels = 0;
-
 	int width = 0;
-
 	int height = 0;
-
 	stbi_set_flip_vertically_on_load(true);
-	unsigned char* pixels = stbi_load(std::string(m_path + '/' + texturePath).c_str(), &width, &height, &channels, 0);
+	unsigned char* pixels = stbi_load(std::string(m_path + "/" + texturePath).c_str(), &width, &height, &channels, 0);
 
 	if (!pixels)
 	{
-		std::cerr << "can't load texture " << texturePath << std::endl;
+		std::cerr << "Can't load image: " << texturePath << std::endl;
 		return nullptr;
 	}
 
-	std::shared_ptr<Renderer::Texture2D> newTexture = m_textures.emplace(textureName, std::make_shared<Renderer::Texture2D>(width, 
-																															height, 
-																															pixels, 
-																															channels, 
-																															GL_NEAREST, 
-																															GL_CLAMP_TO_EDGE)).first->second;
-
+	std::shared_ptr<Renderer::Texture2D> newTexture = m_textures.emplace(textureName, std::make_shared<Renderer::Texture2D>(width,
+		height,
+		pixels,
+		channels,
+		GL_NEAREST,
+		GL_CLAMP_TO_EDGE)).first->second;
 	stbi_image_free(pixels);
-	
 	return newTexture;
 }
 
