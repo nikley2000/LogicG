@@ -1,6 +1,6 @@
 #include "ResourceManager.h"
 #include "../Render/ShaderProgram.h"
-
+#include "../Render/Texture2D.h"
 
 
 
@@ -63,7 +63,7 @@ std::shared_ptr<Renderer::ShaderProgram> ResourcesManager::getShaderProgram(cons
 	return it->second;
 }
 
-void ResourcesManager::loadTexture(const std::string& textureName, const std::string& texturePath)
+std::shared_ptr<Renderer::Texture2D> ResourcesManager::loadTexture(const std::string& textureName, const std::string& texturePath)
 {
 	int channels = 0;
 
@@ -77,11 +77,31 @@ void ResourcesManager::loadTexture(const std::string& textureName, const std::st
 	if (!pixels)
 	{
 		std::cerr << "can't load texture " << texturePath << std::endl;
-		return;
+		return nullptr;
 	}
 
-	stbi_image_free(pixels);
+	std::shared_ptr<Renderer::Texture2D> newTexture = m_textures.emplace(textureName, std::make_shared<Renderer::Texture2D>(width, 
+																															height, 
+																															pixels, 
+																															channels, 
+																															GL_NEAREST, 
+																															GL_CLAMP_TO_EDGE)).first->second;
 
+	stbi_image_free(pixels);
+	
+	return newTexture;
+}
+
+std::shared_ptr<Renderer::Texture2D> ResourcesManager::getTexture(const std::string& textureName)
+{
+	TexturesMap::iterator it = m_textures.find(textureName);
+	if (it == m_textures.end())
+	{
+		std::cerr << "Can't find this Texture: " << textureName << std::endl;
+		return nullptr;
+	}
+
+	return it->second;
 }
 
 std::string ResourcesManager::getFileString(const std::string& relativeFilePath) const
