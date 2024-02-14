@@ -8,10 +8,13 @@ set(CMAKE_CXX_STANDARD 23)
 
 add_executable(${PROJECT_NAME} 
 	src/main.cpp
+
 	src/Render/ShaderProgram.cpp
 	src/Render/ShaderProgram.h
 	src/Render/Texture2D.cpp
 	src/Render/Texture2D.h
+	src/Render/Sprite.h
+	src/Render/Sprite.cpp
 
 	src/Resources/ResourceManager.cpp
 	src/Resources/ResourceManager.h
