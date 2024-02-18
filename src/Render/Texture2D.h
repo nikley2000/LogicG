@@ -3,6 +3,8 @@
 
 #include <glad/glad.h>
 #include <string>
+#include <vec2.hpp>
+#include <map>
 
 namespace Renderer
 {
@@ -36,6 +38,9 @@ namespace Renderer
 		GLenum m_mode;
 		unsigned int m_width;
 		unsigned int m_height;
+
+
+		
 	};
 
 }

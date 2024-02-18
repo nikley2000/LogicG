@@ -13,10 +13,26 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-ResourcesManager::ResourcesManager(const std::string& executablePath)
+
+
+ResourcesManager::ShaderProgramsMap ResourcesManager::m_shaderPrograms;
+ResourcesManager::TexturesMap ResourcesManager::m_textures;
+ResourcesManager::SpritesMap ResourcesManager::m_sprites;
+std::string ResourcesManager::m_path;
+
+
+void ResourcesManager::setExexutablePath(const std::string& executablePath)
 {
 	size_t found = executablePath.find_last_of("/\\");
 	m_path = executablePath.substr(0, found);
+}
+
+void ResourcesManager::unloadAllResources()
+{
+	m_shaderPrograms.clear();
+	m_textures.clear();
+	m_sprites.clear();
+	m_path.clear();
 }
 
 std::shared_ptr<Renderer::ShaderProgram> ResourcesManager::loadShaders(const std::string& shaderName, const std::string& vertexPath, const std::string& fragmentPath)
@@ -26,6 +42,7 @@ std::shared_ptr<Renderer::ShaderProgram> ResourcesManager::loadShaders(const std
 	{
 		std::cerr << "No vertex shader!" << std::endl;
 		return nullptr;
+
 	}
 
 
@@ -139,7 +156,7 @@ std::shared_ptr<Renderer::Sprite> ResourcesManager::getSprite(const std::string&
 	return it->second;
 }
 
-std::string ResourcesManager::getFileString(const std::string& relativeFilePath) const
+std::string ResourcesManager::getFileString(const std::string& relativeFilePath)
 {
 
 

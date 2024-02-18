@@ -13,29 +13,39 @@ namespace Renderer
 
 
 }
+
+
+
+
+
+
+
+
 class ResourcesManager
 {
 public:
 	ResourcesManager(const std::string& executablePath);
+	static void setExexutablePath(const std::string& executablePath);
+	static void unloadAllResources();
 
-	~ResourcesManager() = default;
-
+	~ResourcesManager() = delete;
+	ResourcesManager() = delete;
 	ResourcesManager(const ResourcesManager&) = delete;
 	ResourcesManager& operator=(const ResourcesManager&) = delete;
 	ResourcesManager& operator=(ResourcesManager&&) = delete;
 	ResourcesManager(ResourcesManager&&) = delete;
 
-	std::shared_ptr<Renderer::ShaderProgram> loadShaders(const std::string& shaderName, const std::string& VertexPath, const std::string& fragmentPath);
-	std::shared_ptr<Renderer::ShaderProgram> getShaderProgram(const std::string& shaderName);
+	static std::shared_ptr<Renderer::ShaderProgram> loadShaders(const std::string& shaderName, const std::string& VertexPath, const std::string& fragmentPath);
+	static std::shared_ptr<Renderer::ShaderProgram> getShaderProgram(const std::string& shaderName);
 
 	
 	
 
-	std::shared_ptr<Renderer::Texture2D> loadTexture(const std::string& textureName, const std::string& texturePath);
-	std::shared_ptr<Renderer::Texture2D> getTexture(const std::string& textureName);
+	static std::shared_ptr<Renderer::Texture2D> loadTexture(const std::string& textureName, const std::string& texturePath);
+	static std::shared_ptr<Renderer::Texture2D> getTexture(const std::string& textureName);
 
 
-	std::shared_ptr<Renderer::Sprite> loadSprite(const std::string& spriteName,
+	static std::shared_ptr<Renderer::Sprite> loadSprite(const std::string& spriteName,
 												const std::string& textureName,
 												const std::string& shaderName,
 												const unsigned int spriteWidth,
@@ -43,19 +53,19 @@ public:
 
 
 
-	std::shared_ptr<Renderer::Sprite> getSprite(const std::string& spriteName);
+	static std::shared_ptr<Renderer::Sprite> getSprite(const std::string& spriteName);
 
 private:
-	std::string getFileString(const std::string& relativeFilePath) const;
+	static std::string getFileString(const std::string& relativeFilePath);
 
 	typedef std::map<const std::string, std::shared_ptr<Renderer::ShaderProgram>> ShaderProgramsMap;
-	ShaderProgramsMap m_shaderPrograms;
+	static ShaderProgramsMap m_shaderPrograms;
 
 	typedef std::map<const std::string, std::shared_ptr<Renderer::Texture2D>> TexturesMap;
-	TexturesMap m_textures;
+	static TexturesMap m_textures;
 
 	typedef std::map<const std::string, std::shared_ptr<Renderer::Sprite>> SpritesMap;
-	SpritesMap m_sprites;
+	static SpritesMap m_sprites;
 
-	std::string m_path;
+	static std::string m_path;
 };
