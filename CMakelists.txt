@@ -15,10 +15,12 @@ add_executable(${PROJECT_NAME}
 	src/Render/Texture2D.h
 	src/Render/Sprite.h
 	src/Render/Sprite.cpp
+	src/Render/UI/selector.cpp
 
 	src/Resources/ResourceManager.cpp
 	src/Resources/ResourceManager.h
 	src/Resources/stb_image.h
+	src/Render/UI/selector.h
 )
 
 
