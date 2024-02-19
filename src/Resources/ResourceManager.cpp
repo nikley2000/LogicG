@@ -152,7 +152,7 @@ std::shared_ptr<Renderer::Sprite> ResourcesManager::getSprite(const std::string&
 		std::cerr << "Can't find this Sprite: " << spriteName << std::endl;
 		return nullptr;
 	}
-
+	
 	return it->second;
 }
 

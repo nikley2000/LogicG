@@ -13,7 +13,7 @@
 #include "Resources/ResourceManager.h"
 #include "Render/Texture2D.h"
 #include "Render/Sprite.h"
-
+#include "Render/UI/selector.h"
 
 class Object
 {
@@ -242,27 +242,45 @@ int main(int argc, char** argv)
         pSpriteShaderProgram->setMatrix4("projectionMat", projectionMatrix);
 
         AND obj1;
-        LAMP obj2;
-        obj2.changeState();
-        obj2.changeState();
-        obj2.changeState();
+        AND obj2;
+        OR obj3;
+        LAMP obj4;
+        
+        std::vector<std::shared_ptr<Object>> Objects;
+        Objects.push_back(std::make_shared<AND>(glm::vec2(12,152)));
+        Objects.push_back(std::make_shared<OR>(glm::vec2(200, 312)));
+        Objects.push_back(std::make_shared<LAMP>(glm::vec2(400, 32)));
+        Objects.push_back(std::make_shared<AND>(glm::vec2(300, 132)));
+        UI::selector::init();
+        glfwSetScrollCallback(pWindow, UI::scroll_callback);
+
         double xpos = 110;
         double ypos = 110;
         while (!glfwWindowShouldClose(pWindow))
         {
             /* Render here */
             glClear(GL_COLOR_BUFFER_BIT);
-            
-           
+
+
+
+            if (glfwGetMouseButton(pWindow, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS )
+            {
+
+                glfwGetCursorPos(pWindow, &xpos, &ypos);
+               Objects.push_back(std::make_shared<AND>(glm::vec2(xpos, g_windowSize.y - ypos)));
+            }
+            for (auto& i : Objects)
+            {
+                i->render();
+            }
+          
             //glfwGetCursorPos(pWindow, &xpos, &ypos);
-            obj1.setPosittion({ xpos,  ypos });
-            obj2.setPosittion({ xpos + 200, ypos });
-            obj2.Control();
-            obj1.render();
-            obj2.render();
+         
+
+            UI::selector::update(pWindow);
+            UI::selector::render();
             
-
-
+            
 
             glfwSwapBuffers(pWindow);
             glfwPollEvents();
