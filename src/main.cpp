@@ -37,9 +37,14 @@ public:
         
     }
 
-private:
+    static void SetWindow(GLFWwindow* pWindow)
+    {
+        m_pWindow = pWindow;
+    }
+protected:
     std::shared_ptr<Renderer::Sprite> m_pSprite;
     glm::vec2 m_position;
+    static inline GLFWwindow* m_pWindow = nullptr;
 };
 
 
@@ -49,7 +54,7 @@ public:
     OR(const glm::vec2& position = glm::vec2(0.f))
         :Object("Or", position)
     {
-
+        
     }
 
     ~OR()
@@ -66,7 +71,8 @@ public:
     AND(const glm::vec2& position = glm::vec2(0.f))
         :Object("And", position)
     {
-
+        
+        
     }
 
     ~AND()
@@ -75,6 +81,59 @@ public:
 
 private:
 
+};
+
+class LAMP : public Object
+{
+public:
+    LAMP(const glm::vec2& position = glm::vec2(0.f))
+        :Object("LampOFF", position)
+    {  
+        
+        ResourcesManager::loadSprite("LampONSprite", "LampONTexture", "SpriteShader", 75, 75);
+        ResourcesManager::loadSprite("LampOFFSprite", "LampOFFTexture", "SpriteShader", 75, 75);
+    }
+
+    ~LAMP()
+    {
+    }
+
+    void changeState()
+    {
+        if (isActive)
+        {
+            m_pSprite = ResourcesManager::getSprite("LampOFFSprite");
+            isActive = false;
+        }
+        else
+        {
+            m_pSprite = ResourcesManager::getSprite("LampONSprite");
+            isActive = true;
+        }
+    }
+
+    void Control()
+    {
+        
+       
+        if (GLFW_PRESS == glfwGetKey(m_pWindow, GLFW_KEY_E) && isfirst)
+        {
+            isfirst = false;
+            changeState();
+        }
+
+        if (GLFW_RELEASE == glfwGetKey(m_pWindow, GLFW_KEY_E) && !isfirst)
+        {
+            isfirst = true;
+           
+        }
+
+        
+    }
+
+private:
+    bool isActive = false;
+    bool isfirst = true;
 };
 
 glm::vec2 g_windowSize(640, 480);
@@ -155,7 +214,7 @@ int main(int argc, char** argv)
     std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
     std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
 
-    glClearColor(1, 1, 0, 1);
+    glClearColor(1, 1, 1, 1);
 
     {
         ResourcesManager::setExexutablePath(argv[0]);
@@ -167,13 +226,11 @@ int main(int argc, char** argv)
             return -1;
         }
 
-
-        ResourcesManager::loadTexture("OrTexture", "res/textures/or.png");
+        Object::SetWindow(pWindow);
         ResourcesManager::loadTexture("AndTexture", "res/textures/AND.png");
-       
-
-      
-
+        ResourcesManager::loadTexture("OrTexture", "res/textures/or.png");
+        ResourcesManager::loadTexture("LampOFFTexture", "res/textures/LAMP_OFF.png");
+        ResourcesManager::loadTexture("LampONTexture", "res/textures/LAMP_ON.png");
 
 
         glm::mat4 projectionMatrix = glm::ortho(0.f, static_cast<float>(g_windowSize.x), 0.f, static_cast<float>(g_windowSize.y), -100.f, 100.f);
@@ -185,7 +242,10 @@ int main(int argc, char** argv)
         pSpriteShaderProgram->setMatrix4("projectionMat", projectionMatrix);
 
         AND obj1;
-        AND obj2;
+        LAMP obj2;
+        obj2.changeState();
+        obj2.changeState();
+        obj2.changeState();
         double xpos = 110;
         double ypos = 110;
         while (!glfwWindowShouldClose(pWindow))
@@ -194,9 +254,10 @@ int main(int argc, char** argv)
             glClear(GL_COLOR_BUFFER_BIT);
             
            
-            glfwGetCursorPos(pWindow, &xpos, &ypos);
-            obj1.setPosittion({ xpos, g_windowSize.y - ypos });
-            obj2.setPosittion({ xpos + 200, g_windowSize.y - ypos });
+            //glfwGetCursorPos(pWindow, &xpos, &ypos);
+            obj1.setPosittion({ xpos,  ypos });
+            obj2.setPosittion({ xpos + 200, ypos });
+            obj2.Control();
             obj1.render();
             obj2.render();
             
