@@ -19,6 +19,22 @@ add_executable(${PROJECT_NAME}
 
 	src/Resources/ResourceManager.cpp
 	src/Resources/ResourceManager.h
+
+
+
+	src/Resources/Objects/BaseObject.cpp
+	src/Resources/Objects/BaseObject.h
+	src/Resources/Objects/Objects.h
+	src/Resources/Objects/And.cpp
+	src/Resources/Objects/And.h
+	src/Resources/Objects/Or.cpp
+	src/Resources/Objects/Or.h
+	src/Resources/Objects/Lamp.cpp
+	src/Resources/Objects/Lamp.h
+
+
+
+
 	src/Resources/stb_image.h
 	src/Render/UI/selector.h
 )

@@ -5,9 +5,14 @@
 #include <string>
 #include "../../Resources/ResourceManager.h"
 #include <GLFW/glfw3.h>
+#include "../../Resources/Objects/Objects.h"
+
 
 namespace UI
 {
+
+
+	
 
 	void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
@@ -26,11 +31,12 @@ namespace UI
 
 		static void ChangePositon(double direction);
 
+		static Object getObject();
 
 
 	private:
-		typedef std::vector<std::shared_ptr<Renderer::Sprite>> SpritesVec;
-		static inline  SpritesVec m_selector;
-		static inline int positon = 0;
+		typedef std::vector<Object> SelectorVec;
+		static inline  SelectorVec m_selector;
+		static inline int position = 0;
 	};
 }

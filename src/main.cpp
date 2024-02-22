@@ -7,134 +7,23 @@
 #include <mat4x4.hpp>
 #include <gtc/matrix_transform.hpp>
 
+#include <vector>
 
 
 #include "Render/ShaderProgram.h"
 #include "Resources/ResourceManager.h"
+#include "Resources/Objects/Objects.h"
 #include "Render/Texture2D.h"
 #include "Render/Sprite.h"
 #include "Render/UI/selector.h"
 
-class Object
-{
-public:
-    Object(const std::string texture, const glm::vec2& position = glm::vec2(0.f))
-    {
-
-        m_pSprite = ResourcesManager::loadSprite(texture + "Sprite", texture + "Texture", "SpriteShader", 75, 75);
-        m_position = position;
-    }
-
-    void render()
-    {
-        m_pSprite->setPosition(m_position);
-        m_pSprite->render();
-    }
-
-    void setPosittion(const glm::vec2& position)
-    {
-        m_position = position;
-        
-    }
-
-    static void SetWindow(GLFWwindow* pWindow)
-    {
-        m_pWindow = pWindow;
-    }
-protected:
-    std::shared_ptr<Renderer::Sprite> m_pSprite;
-    glm::vec2 m_position;
-    static inline GLFWwindow* m_pWindow = nullptr;
-};
 
 
-class OR : public Object
-{
-public:
-    OR(const glm::vec2& position = glm::vec2(0.f))
-        :Object("Or", position)
-    {
-        
-    }
 
-    ~OR()
-    {
-    }
 
-private:
 
-};
 
-class AND : public Object
-{
-public:
-    AND(const glm::vec2& position = glm::vec2(0.f))
-        :Object("And", position)
-    {
-        
-        
-    }
 
-    ~AND()
-    {
-    }
-
-private:
-
-};
-
-class LAMP : public Object
-{
-public:
-    LAMP(const glm::vec2& position = glm::vec2(0.f))
-        :Object("LampOFF", position)
-    {  
-        
-        ResourcesManager::loadSprite("LampONSprite", "LampONTexture", "SpriteShader", 75, 75);
-        ResourcesManager::loadSprite("LampOFFSprite", "LampOFFTexture", "SpriteShader", 75, 75);
-    }
-
-    ~LAMP()
-    {
-    }
-
-    void changeState()
-    {
-        if (isActive)
-        {
-            m_pSprite = ResourcesManager::getSprite("LampOFFSprite");
-            isActive = false;
-        }
-        else
-        {
-            m_pSprite = ResourcesManager::getSprite("LampONSprite");
-            isActive = true;
-        }
-    }
-
-    void Control()
-    {
-        
-       
-        if (GLFW_PRESS == glfwGetKey(m_pWindow, GLFW_KEY_E) && isfirst)
-        {
-            isfirst = false;
-            changeState();
-        }
-
-        if (GLFW_RELEASE == glfwGetKey(m_pWindow, GLFW_KEY_E) && !isfirst)
-        {
-            isfirst = true;
-           
-        }
-
-        
-    }
-
-private:
-    bool isActive = false;
-    bool isfirst = true;
-};
 
 glm::vec2 g_windowSize(640, 480);
 
@@ -246,11 +135,12 @@ int main(int argc, char** argv)
         OR obj3;
         LAMP obj4;
         
+        
+
         std::vector<std::shared_ptr<Object>> Objects;
         Objects.push_back(std::make_shared<AND>(glm::vec2(12,152)));
         Objects.push_back(std::make_shared<OR>(glm::vec2(200, 312)));
-        Objects.push_back(std::make_shared<LAMP>(glm::vec2(400, 32)));
-        Objects.push_back(std::make_shared<AND>(glm::vec2(300, 132)));
+  
         UI::selector::init();
         glfwSetScrollCallback(pWindow, UI::scroll_callback);
 
@@ -267,14 +157,14 @@ int main(int argc, char** argv)
             {
 
                 glfwGetCursorPos(pWindow, &xpos, &ypos);
-               Objects.push_back(std::make_shared<AND>(glm::vec2(xpos, g_windowSize.y - ypos)));
+                Objects.push_back(std::make_shared<Object>(UI::selector::getObject()));
             }
             for (auto& i : Objects)
             {
                 i->render();
             }
           
-            //glfwGetCursorPos(pWindow, &xpos, &ypos);
+            glfwGetCursorPos(pWindow, &xpos, &ypos);
          
 
             UI::selector::update(pWindow);
